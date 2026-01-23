@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h2>Doctor Dashboard</h2>
+
+<!-- ========================= -->
+<!-- SEARCH PATIENT -->
+<!-- ========================= -->
+<div class="card">
+    <form method="get" style="margin-bottom: 10px;">
+        <input
+            type="text"
+            name="q"
+            placeholder="Search patient by username"
+            value="{{ query }}"
+            style="padding:6px; width:200px;"
+        >
+        <button type="submit" class="btn btn-primary">
+            Search
+        </button>
+    </form>
+</div>
+
+<!-- ========================= -->
+<!-- PATIENT APPOINTMENTS -->
+<!-- ========================= -->
+<div class="card">
+    <h3>Patient Appointments</h3>
+
+    {% if appointments %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Patient</th>
+                    <th>Date & Time</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for appt in appointments %}
+                <tr>
+                    <!-- Patient -->
+                    <td>
+                        {{ appt.patient.user.username }}
+                    </td>
+
+                    <!-- Date -->
+                    <td>
+                        {{ appt.appointment_date|date:"d M Y, H:i" }}
+                    </td>
+
+                    <!-- Status -->
+                    <td>
+                        {% if appt.status == 'PENDING' %}
+                            <span class="badge badge-pending">Pending</span>
+                        {% elif appt.status == 'COMPLETED' %}
+                            <span class="badge badge-completed">Completed</span>
+                        {% else %}
+                            <span class="badge badge-cancelled">Cancelled</span>
+                        {% endif %}
+                    </td>
+
+                    <!-- Action -->
+                    <td>
+                        {% if appt.status == 'COMPLETED' %}
+                            {% if appt.visit %}
+                                <a class="btn btn-secondary"
+                                   href="{% url 'visit_context' appt.visit.id %}">
+                                    View / Write Notes
+                                </a>
+                            {% else %}
+                                <span style="color:#999;">Visit not created</span>
+                            {% endif %}
+                        {% else %}
+                            <form method="post"
+                                  action="{% url 'complete_appointment' appt.id %}">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-success">
+                                    Mark Completed
+                                </button>
+                            </form>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No appointments found.</p>
+    {% endif %}
+</div>
+
+{% endblock %}

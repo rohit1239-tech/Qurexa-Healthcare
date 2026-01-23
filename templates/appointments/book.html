@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h2>Book Appointment</h2>
+
+<div class="card">
+<form method="post">
+    {% csrf_token %}
+    <label>Doctor</label><br>
+    <select name="doctor">
+        {% for doctor in doctors %}
+            <option value="{{ doctor.id }}">{{ doctor }}</option>
+        {% endfor %}
+    </select><br><br>
+
+    <label>Date & Time</label><br>
+    <input type="datetime-local" name="appointment_date"><br><br>
+
+    <button type="submit">Book</button>
+</form>
+</div>
+
+{% endblock %}

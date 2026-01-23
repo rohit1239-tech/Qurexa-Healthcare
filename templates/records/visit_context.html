@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2 class="page-title">Clinical Context Intelligence</h2>
+
+<!-- ========================= -->
+<!-- 1️⃣ DOCTOR MANUAL REPORT -->
+<!-- ========================= -->
+<div class="card">
+    <h3>Doctor Report</h3>
+
+    {% if user.role == "DOCTOR" %}
+        {% if not visit.is_finalized %}
+            <form method="post">
+                {% csrf_token %}
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Symptoms</label>
+                        <textarea name="symptoms" rows="4">{{ visit.symptoms }}</textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Clinical Notes</label>
+                        <textarea name="clinical_notes" rows="4">{{ visit.clinical_notes }}</textarea>
+                    </div>
+                </div>
+
+                <div class="action-row">
+                    <button type="submit" name="save" class="btn btn-primary">
+                        Save Notes
+                    </button>
+
+                    <button type="submit" name="generate_ai" class="btn btn-secondary">
+                        Generate AI Summary
+                    </button>
+
+                    <button type="submit" name="finalize" class="btn btn-danger">
+                        Finalize Visit
+                    </button>
+                </div>
+            </form>
+        {% else %}
+            <p><strong>Symptoms:</strong></p>
+            <p>{{ visit.symptoms|default:"Not recorded" }}</p>
+
+            <p><strong>Clinical Notes:</strong></p>
+            <p>{{ visit.clinical_notes|default:"Not recorded" }}</p>
+
+            <p class="text-muted">
+                This visit is finalized and cannot be edited.
+            </p>
+        {% endif %}
+    {% else %}
+        <!-- Patient view (read-only) -->
+        <p><strong>Symptoms:</strong></p>
+        <p>{{ visit.symptoms|default:"Not recorded" }}</p>
+
+        <p><strong>Clinical Notes:</strong></p>
+        <p>{{ visit.clinical_notes|default:"Not recorded" }}</p>
+    {% endif %}
+</div>
+
+<!-- ========================= -->
+<!-- 2️⃣ AUTO AI SUMMARY -->
+<!-- ========================= -->
+<div class="card">
+    <h3>Auto Summary</h3>
+
+    {% if visit.ai_summary %}
+        <p class="ai-summary">{{ visit.ai_summary }}</p>
+    {% else %}
+        <p class="text-muted">AI summary not generated yet.</p>
+    {% endif %}
+</div>
+
+<!-- ========================= -->
+<!-- 3️⃣ CURRENT VISIT -->
+<!-- ========================= -->
+<div class="card">
+    <h3>Current Visit</h3>
+
+    <p><strong>Doctor:</strong> {{ visit.doctor.user.username }}</p>
+    <p><strong>Date:</strong> {{ visit.created_at|date:"d M Y, H:i" }}</p>
+
+    <p>
+        <strong>Status:</strong>
+        {% if visit.is_finalized %}
+            <span class="badge badge-completed">Completed</span>
+        {% else %}
+            <span class="badge badge-pending">In Progress</span>
+        {% endif %}
+    </p>
+</div>
+
+<!-- ========================= -->
+<!-- PREVIOUS VISITS -->
+<!-- ========================= -->
+<div class="card">
+    <h3>Previous Visits</h3>
+
+    {% if previous_visits %}
+        <ul class="visit-list">
+            {% for v in previous_visits %}
+                <li class="visit-item">
+                    <!-- Date -->
+                    <span class="visit-date">
+                        {{ v.created_at|date:"d M Y" }}
+                    </span>
+
+                    <!-- View button -->
+                    <a class="btn btn-sm btn-secondary"
+                       href="/records/visit/{{ v.id }}/context/">
+                        View Report
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p class="text-muted">No previous visits available.</p>
+    {% endif %}
+</div>
+
+
+
+{% endblock %}

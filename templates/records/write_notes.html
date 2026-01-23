@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h2>Clinical Notes</h2>
+
+<div class="card">
+    <p><strong>Patient:</strong> {{ visit.patient.user.username }}</p>
+    <p><strong>Date:</strong> {{ visit.created_at|date:"d M Y" }}</p>
+
+    <form method="post">
+        {% csrf_token %}
+
+        <label>Symptoms</label>
+        <textarea name="symptoms" rows="4">{{ visit.symptoms }}</textarea>
+
+        <label>Clinical Notes</label>
+        <textarea name="clinical_notes" rows="6">{{ visit.clinical_notes }}</textarea>
+
+        <br>
+        <button type="submit" class="btn btn-success">
+            Save Notes
+        </button>
+    </form>
+</div>
+
+{% endblock %}

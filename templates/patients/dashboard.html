@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h2>Patient Dashboard</h2>
+
+<!-- ========================= -->
+<!-- UPCOMING APPOINTMENTS -->
+<!-- ========================= -->
+<div class="card">
+    <h3>Upcoming Appointments</h3>
+
+    {% if upcoming %}
+        <table>
+            <tr>
+                <th>Doctor</th>
+                <th>Date</th>
+                <th>Status</th>
+            </tr>
+
+            {% for appt in upcoming %}
+            <tr>
+                <td>
+                    {{ appt.doctor.user.username }} <br>
+                    <small style="color:#666;">
+                        {{ appt.doctor.specialization }}
+                    </small>
+                </td>
+
+                <td>
+                    {{ appt.appointment_date|date:"d M Y, H:i" }}
+                </td>
+
+                <td>
+                    {% if appt.status == 'PENDING' %}
+                        <span class="badge badge-pending">Pending</span>
+                    {% elif appt.status == 'COMPLETED' %}
+                        <span class="badge badge-completed">Completed</span>
+                    {% else %}
+                        <span class="badge badge-cancelled">Cancelled</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p>No upcoming appointments.</p>
+    {% endif %}
+</div>
+
+<!-- ========================= -->
+<!-- VISIT HISTORY -->
+<!-- ========================= -->
+<div class="card">
+    <h3>Visit History</h3>
+
+    {% if visits %}
+        <table>
+            <tr>
+                <th>Doctor</th>
+                <th>Date</th>
+                <th>Details</th>
+            </tr>
+
+            {% for visit in visits %}
+            <tr>
+                <td>
+                    {{ visit.doctor.user.username }}
+                </td>
+
+                <td>
+                    {{ visit.created_at|date:"d M Y" }}
+                </td>
+
+                <td>
+                    <a class="btn btn-secondary"
+                       href="/records/visit/{{ visit.id }}/context/">
+                        View Details
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p>No visit records yet.</p>
+    {% endif %}
+</div>
+
+{% endblock %}

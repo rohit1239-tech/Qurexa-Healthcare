@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="card">
+    <h1>Qurexa Healthcare Platform</h1>
+    <p>AI-ready clinical context intelligence system.</p>
+
+    {% if user.is_authenticated %}
+        {% if user.role == 'PATIENT' %}
+            <a href="/patients/dashboard/">
+                <button>Go to Patient Dashboard</button>
+            </a>
+            <a href="/appointments/book/">
+                <button>Book Appointment</button>
+            </a>
+
+        {% elif user.role == 'DOCTOR' %}
+            <a href="/doctors/dashboard/">
+                <button>Go to Doctor Dashboard</button>
+            </a>
+        {% endif %}
+    {% else %}
+        <a href="/login/">
+            <button>Login</button>
+        </a>
+    {% endif %}
+</div>
+{% endblock %}

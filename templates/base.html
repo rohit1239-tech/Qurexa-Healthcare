@@ -1,0 +1,197 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Qurexa</title>
+
+    <!-- Base Styling (can move to static/css later) -->
+    <style>
+        /* ===== GLOBAL ===== */
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #f5f6fa;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        /* ===== NAVBAR ===== */
+        header {
+            background-color: #004d99;
+            padding: 14px 20px;
+        }
+
+        nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav-left a {
+            color: #ffffff;
+            margin-right: 18px;
+            font-weight: bold;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-right span {
+            color: #e0e0e0;
+            margin-right: 12px;
+            font-size: 14px;
+        }
+
+        .nav-right button {
+            background: #ffffff;
+            color: #004d99;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        /* ===== PAGE LAYOUT ===== */
+        .container {
+            padding: 25px;
+            max-width: 1100px;
+            margin: auto;
+        }
+
+        /* ===== CARD ===== */
+        .card {
+            background: #ffffff;
+            padding: 18px;
+            margin-bottom: 18px;
+            border-radius: 6px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+        }
+
+        /* ===== BUTTONS ===== */
+        .btn {
+            background: #004d99;
+            color: #ffffff;
+            padding: 8px 14px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            display: inline-block;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+        }
+
+        .btn-danger {
+            background: #d9534f;
+        }
+
+        /* ===== TABLE ===== */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f0f0f0;
+        }
+
+        /* ===== BADGES ===== */
+        .badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            color: #ffffff;
+        }
+
+        .badge-pending {
+            background-color: #f0ad4e;
+        }
+
+        .badge-completed {
+            background-color: #5cb85c;
+        }
+
+        .badge-cancelled {
+            background-color: #d9534f;
+        }
+
+        /* ===== PREVIOUS VISITS ===== */
+        .visit-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .visit-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .visit-date {
+            font-weight: 600;
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- ================= NAVBAR ================= -->
+<header>
+    <nav>
+
+        <!-- LEFT -->
+        <div class="nav-left">
+            <a href="/">Qurexa</a>
+
+            {% if user.is_authenticated %}
+                {% if user.role == 'PATIENT' %}
+                    <a href="/patients/dashboard/">Dashboard</a>
+                    <a href="/appointments/book/">Book Appointment</a>
+                {% elif user.role == 'DOCTOR' %}
+                    <a href="/doctors/dashboard/">Dashboard</a>
+                {% endif %}
+            {% endif %}
+        </div>
+
+        <!-- RIGHT -->
+        <div class="nav-right">
+            {% if user.is_authenticated %}
+                <span>Hello, {{ user.username }}</span>
+
+                <form method="post" action="/logout/" style="margin: 0;">
+                    {% csrf_token %}
+                    <button type="submit">Logout</button>
+                </form>
+            {% else %}
+                <a href="/login/" class="btn">Login</a>
+            {% endif %}
+        </div>
+
+    </nav>
+</header>
+
+<!-- ================= PAGE CONTENT ================= -->
+<div class="container">
+    {% block content %}
+    {% endblock %}
+</div>
+
+</body>
+</html>
