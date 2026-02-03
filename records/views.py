@@ -6,6 +6,9 @@ from .models import Visit
 from doctors.models import Doctor
 from ai_engine.services import generate_clinical_summary
 
+def visit_list(request):
+    visits = Visit.objects.all().order_by('-created_at')
+    return render(request, 'records/visit_list.html', {'visits': visits})
 
 # =========================================================
 # VISIT CONTEXT (Doctor + Patient view)

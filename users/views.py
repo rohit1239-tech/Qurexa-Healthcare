@@ -138,3 +138,14 @@ def verify_otp(request):
         return redirect('patient_dashboard')
 
     return render(request, 'users/verify_otp.html')
+
+from django.http import HttpResponse
+from .utils import send_otp_email
+
+def test_sendgrid_otp(request):
+    otp = send_otp_email('yengantiwarrohit1239@gmail.com')
+
+    if otp:
+        return HttpResponse("OTP sent successfully! Check your Gmail inbox.")
+    else:
+        return HttpResponse("Failed to send OTP")

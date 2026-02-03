@@ -145,4 +145,16 @@ LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/login/'
 LOGIN_URL = '/login/'
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# ================= EMAIL CONFIG ======
+# ================= EMAIL (SendGrid) =================
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+
+EMAIL_HOST_USER = 'yengantiwarrohit1239@gmail.com'
+
+import os
+EMAIL_HOST_PASSWORD = 'hijq pvwn xeur ubkv'
+
